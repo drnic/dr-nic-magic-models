@@ -1,0 +1,12 @@
+first:
+  id: 1
+  name: Group One
+  description: First group
+other:
+  id: 2
+  name: Group Plus
+  description: Extended Group
+other:
+  id: 2
+  name: Group Plus
+  description: Extended Group

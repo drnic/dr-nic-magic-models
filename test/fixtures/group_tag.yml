@@ -1,0 +1,11 @@
+first:
+  id: 1
+  name: Test
+  group_id: 1
+  referenced_group_id: 1
+second:
+  id: 2
+  name: Also Test
+  group_id: 1
+  referenced_group_id: NULL
+ 

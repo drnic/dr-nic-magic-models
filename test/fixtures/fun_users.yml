@@ -1,0 +1,14 @@
+first:
+  id: 1
+  firstname: First
+  lastname: Person
+  login: first
+  email: first@person.com
+  type: FunUser
+second:
+  id: 2
+  firstname: Second
+  lastname: Person
+  login: sec
+  email: sec@person.com
+  type: FunUserPlus

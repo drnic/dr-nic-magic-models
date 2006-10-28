@@ -1,0 +1,2 @@
+class FunUserPlus < FunUser
+end

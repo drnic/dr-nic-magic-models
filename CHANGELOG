@@ -1,0 +1,9 @@
+* 0.2.5 * - Initial public release
+- ActiveRecords can now be auto-created in memory when first referenced
+  from their table name, without an explicit class definition.
+- ActiveRecords will automatically include validates_presence_of on
+  each field with :null => false
+- ActiveRecords will automatically generate simple has_many, has_one,
+  belongs_to assocations based upon assumed foreign keys. E.g.
+  foreign key to products table is assumed to be product_id.
+
