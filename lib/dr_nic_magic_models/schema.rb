@@ -87,22 +87,7 @@ module DrNicMagicModels
           
           if preload
             # create by MAGIC!
-            begin
-              klass = model_class_name.constantize
-            rescue Exception => e
-              # create our class!
-              class_def = <<-end_eval
-                class #{model_class_name} < ActiveRecord::Base          
-                  set_table_name('#{table_name}')
-                end
-              end_eval
-              eval(class_def, TOPLEVEL_BINDING)            
-              klass = model_class_name.constantize            
-            end
-  
-            # magic up some validation          
-            klass.send(:extend, DrNicMagicModels::Validations)
-            klass.send(:generate_validations)
+            klass = model_class_name.constantize
 
             # Process FKs?
             if @conn.supports_fetch_foreign_keys?          
@@ -162,9 +147,9 @@ module DrNicMagicModels
         
         processed_columns.keys.each do |key1|
           processed_columns.keys.each do |key2|
-           next if key1 == key2
-           logger.debug "\n*** #{processed_columns[key1][:has_some_class]}.send 'has_many', #{processed_columns[key2][:belongs_to_name].to_s.pluralize.to_sym}, :through => #{processed_columns[key2][:has_some_name]}\n\n"
-           processed_columns[key1][:has_some_class].send 'has_many', processed_columns[key2][:belongs_to_name].to_s.pluralize.to_sym, :through => processed_columns[key2][:has_some_name].to_sym
+            next if key1 == key2
+            logger.debug "\n*** #{processed_columns[key1][:has_some_class]}.send 'has_many', #{processed_columns[key2][:belongs_to_name].to_s.pluralize.to_sym}, :through => #{processed_columns[key2][:has_some_name]}\n\n"
+            processed_columns[key1][:has_some_class].send 'has_many', processed_columns[key2][:belongs_to_name].to_s.pluralize.to_sym, :through => processed_columns[key2][:has_some_name].to_sym
           end              
         end
             
