@@ -11,8 +11,8 @@ class Module
     unless table_name = DrNicMagicModels::Schema.models[class_id]
       raise NameError.new("uninitialized constant #{class_id}") if DrNicMagicModels::Schema.models.enquired? class_id
     end
-    base_class = DrNicMagicModels::Schema.base_class || ActiveRecord::Base
-    klass = create_class(class_id, base_class) do
+    superklass = DrNicMagicModels::Schema.superklass || ActiveRecord::Base
+    klass = create_class(class_id, superklass) do
       set_table_name table_name
       include DrNicMagicModels::MagicModel
       extend DrNicMagicModels::Validations

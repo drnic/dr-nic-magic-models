@@ -3,7 +3,7 @@ module DrNicMagicModels
   class Schema
     class << self
       cattr_accessor :inflector
-      cattr_accessor :base_class
+      cattr_accessor :superklass
       
       def inflector
         @@inflector ||= Inflector.new
@@ -52,8 +52,8 @@ module DrNicMagicModels
      
       def load_schema(preload = false)
         return if ! @@models.nil?
-      
-        raise "No database connection" if !(@conn = base_class.connection)
+        @@superklass ||= ActiveRecord::Base
+        raise "No database connection" if !(@conn = superklass.connection)
         
         @@models = ModelHash.new
         @@tables = Hash.new
