@@ -1,12 +1,5 @@
 h1. Dr Nic's Magic Models
 
-h2. News alert
-
-Assocations now generated using "Foreign Keys":foreignkeys.html too!
-
-Now... on with the magic show!
-<br />
-<br />
 
 <blockquote>
 *conjure*  1. To create events that appear to be magical<br />
