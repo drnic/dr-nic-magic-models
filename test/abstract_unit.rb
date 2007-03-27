@@ -1,5 +1,6 @@
 $:.unshift(File.dirname(__FILE__) + '/../lib')
 
+require 'rubygems'
 require 'test/unit'
 require 'active_record'
 require 'active_record/fixtures'
@@ -7,6 +8,9 @@ require 'active_support/binding_of_caller'
 require 'active_support/breakpoint'
 require 'connection'
 require 'dr_nic_magic_models'
+
+ActiveSupport::Deprecation.debug = true
+
 
 QUOTED_TYPE = ActiveRecord::Base.connection.quote_column_name('type') unless Object.const_defined?(:QUOTED_TYPE)
 
@@ -16,6 +20,7 @@ class Test::Unit::TestCase #:nodoc:
   self.use_transactional_fixtures = true #(ENV['AR_NO_TX_FIXTURES'] != "yes")
 
   def create_fixtures(*table_names, &block)
+    puts "Creating fixtures: #{table_names}"
     Fixtures.create_fixtures(File.dirname(__FILE__) + "/fixtures/", table_names, {}, &block)
   end
   

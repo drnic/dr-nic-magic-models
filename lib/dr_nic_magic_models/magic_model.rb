@@ -29,7 +29,7 @@ module DrNicMagicModels::MagicModel
         if unknown_method? method
           result = find_belongs_to method, *args, &block 
           result = find_has_some method, *args, &block if not result
-          #result = find_has_some_indirect method, *args, &block if not result
+          result = find_has_some_indirect method, *args, &block if not result
           return result if result
         end
         add_known_unknown method

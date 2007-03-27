@@ -2,11 +2,12 @@ require 'abstract_unit'
 require 'pp'
 
 class InvisibleModelAccessTest < Test::Unit::TestCase
-  fixtures :fun_users, :groups, :group_memberships, :group_tag
+  # fixtures :fun_users, :groups, :group_memberships, :group_tag
   
   def setup
+    create_fixtures :fun_users, :groups, :group_memberships, :group_tag
     @classes = [FunUser, Group, GroupMembership, GroupTag]
-    @group = groups(:first)
+    @group = Group.find(:first)
   end
   
   def test_attributes
@@ -21,6 +22,7 @@ class InvisibleModelAccessTest < Test::Unit::TestCase
   end
   
   def test_sti
+    require 'fun_user_plus'
     x = FunUserPlus.find(:all)
     assert x.inject {|n,v| n &= v.class == FunUserPlus}, "Wrong object class in FunUserPlus.find(:all)"
     plus = x.first

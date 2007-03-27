@@ -23,12 +23,12 @@ PKG_FILES = FileList[
 
 
 desc "Default Task"
-task :default => [ :test_mysql ] # UNTESTED =, :test_sqlite, :test_postgresql ]
-task :test    => [ :test_mysql ]
+task :default => [ :test_sqlite ] 
+task :test    => [ :test_sqlite ]
 
 # Run the unit tests
 
-for adapter in %w( mysql postgresql ) # UNTESTED - postgresql sqlite sqlite3 firebird sqlserver sqlserver_odbc db2 oracle sybase openbase )
+for adapter in %w( sqlite mysql postgresql ) # UNTESTED - postgresql sqlite sqlite3 firebird sqlserver sqlserver_odbc db2 oracle sybase openbase )
   Rake::TestTask.new("test_#{adapter}") { |t|
     t.libs << "test" << "test/connections/native_#{adapter}"
     t.pattern = "test/*_test{,_#{adapter}}.rb"
@@ -54,6 +54,20 @@ end
 
 desc 'Rebuild the MySQL test databases'
 task :rebuild_mysql_databases => [:drop_mysql_databases, :build_mysql_databases]
+
+desc 'Build the sqlite test databases'
+task :build_sqlite_databases do 
+  puts File.join(SCHEMA_PATH, 'sqlite.sql')
+  %x( sqlite3 test.db < test/fixtures/db_definitions/sqlite.sql )
+end
+
+desc 'Drop the sqlite test databases'
+task :drop_sqlite_databases do 
+  %x( rm -f test.db )
+end
+
+desc 'Rebuild the sqlite test databases'
+task :rebuild_sqlite_databases => [:drop_sqlite_databases, :build_sqlite_databases]
 
 desc 'Build the PostgreSQL test databases'
 task :build_postgresql_databases do 

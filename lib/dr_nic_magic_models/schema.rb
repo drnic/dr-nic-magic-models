@@ -51,10 +51,10 @@ module DrNicMagicModels
       end
       
       def load_schema(preload = false)
-        return if ! @@models.nil?
+        return if !@@models.nil?
         
         @@superklass ||= ActiveRecord::Base
-        raise "No database connection" if !(@conn = superklass.connection)
+        raise "No database connection" if !(@conn = @@superklass.connection)
         
         @@models = ModelHash.new
         @@tables = Hash.new
@@ -155,7 +155,6 @@ module DrNicMagicModels
         end
         
       end
-      
       
       def add_has_some_belongs_to(belongs_to_klass, belongs_to_fk, has_some_klass)
         
