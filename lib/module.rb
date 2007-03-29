@@ -1,27 +1,31 @@
 class Module
   alias :normal_const_missing :const_missing
   
-  def const_missing(class_id)
-    #puts "const_missing('#{class_id}')"
-    #raise 'foo' rescue puts $!.backtrace
+  def const_missing(class_id)    
     begin
       return normal_const_missing(class_id)
     rescue
     end
-    unless table_name = DrNicMagicModels::Schema.models[class_id]
-      raise NameError.new("uninitialized constant #{class_id}") if DrNicMagicModels::Schema.models.enquired? class_id
+    @magic_schema ||= DrNicMagicModels::Schema.new self
+    unless table_name = @magic_schema.models[class_id]
+      raise NameError.new("uninitialized constant #{class_id}") if @magic_schema.models.enquired? class_id
     end
-    superklass = DrNicMagicModels::Schema.superklass || ActiveRecord::Base
+    superklass = @magic_schema.superklass || ActiveRecord::Base
     klass = create_class(class_id, superklass) do
       set_table_name table_name
       include DrNicMagicModels::MagicModel
       extend DrNicMagicModels::Validations
     end
     klass.generate_validations # need to call this AFTER the class name has been assigned
-    DrNicMagicModels::Schema.inflector.post_class_creation klass
+    @magic_schema.inflector.post_class_creation klass
     klass
   end
+  
+  def magic_module(table_name_prefix)
+    self.instance_variable_set "@table_name_prefix", table_name_prefix
+  end
 
+  private
   def create_class(class_name, superclass, &block)
     klass = Class.new superclass, &block
     Object.const_set class_name, klass
