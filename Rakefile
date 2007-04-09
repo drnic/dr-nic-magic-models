@@ -1,30 +1,55 @@
 require 'rubygems'
 require 'rake'
+require 'rake/clean'
 require 'rake/testtask'
 require 'rake/rdoctask'
 require 'rake/packagetask'
 require 'rake/gempackagetask'
 require 'rake/contrib/rubyforgepublisher'
+require 'hoe'
 require File.join(File.dirname(__FILE__), 'lib', 'dr_nic_magic_models', 'version')
 
-PKG_BUILD     = ENV['PKG_BUILD'] ? '.' + ENV['PKG_BUILD'] : ''
-PKG_NAME      = 'dr_nic_magic_models'
-PKG_VERSION   = DrNicMagicModels::VERSION::STRING + PKG_BUILD
-PKG_FILE_NAME = "#{PKG_NAME}-#{PKG_VERSION}"
-
-RELEASE_NAME  = "REL #{PKG_VERSION}"
-
-RUBY_FORGE_PROJECT = "magicmodels"
-RUBY_FORGE_USER    = "nicwilliams"
-
-PKG_FILES = FileList[
-    "lib/**/*", "test/**/*", "examples/**/*", "doc/**/*", "website/**/*", "scripts/**/*", "[A-Z]*", "install.rb", "Rakefile"
-].exclude(/\bCVS\b|~$/)
+AUTHOR = "nicwilliams"  # can also be an array of Authors
+EMAIL = "drnicwilliams@gmail.com"
+DESCRIPTION = "Dr Nic's Magic Models - Invisible validations, assocations and Active Record models themselves!"
+GEM_NAME = "dr_nic_magic_models" # what ppl will type to install your gem
+RUBYFORGE_PROJECT = "magicmodels" # The unix name for your project
+HOMEPATH = "http://#{RUBYFORGE_PROJECT}.rubyforge.org"
 
 
-desc "Default Task"
-task :default => [ :test_sqlite ] 
-task :test    => [ :test_sqlite ]
+NAME = "magic_multi_connections"
+REV = nil # UNCOMMENT IF REQUIRED: File.read(".svn/entries")[/committed-rev="(d+)"/, 1] rescue nil
+VERS = ENV['VERSION'] || (DrNicMagicModels::VERSION::STRING + (REV ? ".#{REV}" : ""))
+CLEAN.include ['**/.*.sw?', '*.gem', '.config']
+RDOC_OPTS = ['--quiet', '--title', "dr_nic_magic_models documentation",
+    "--opname", "index.html",
+    "--line-numbers", 
+    "--main", "README",
+    "--inline-source"]
+
+class Hoe
+  def extra_deps 
+    @extra_deps.reject { |x| Array(x).first == 'hoe' } 
+  end 
+end
+
+# Generate all the Rake tasks
+# Run 'rake -T' to see list of generated tasks (from gem root directory)
+hoe = Hoe.new(GEM_NAME, VERS) do |p|
+  p.author = AUTHOR 
+  p.description = DESCRIPTION
+  p.email = EMAIL
+  p.summary = DESCRIPTION
+  p.url = HOMEPATH
+  p.rubyforge_name = RUBYFORGE_PROJECT if RUBYFORGE_PROJECT
+  p.test_globs = ["test/**/test_*.rb"]
+  p.clean_globs = CLEAN  #An array of file patterns to delete on clean.
+  
+  # == Optional
+  #p.changes        - A description of the release's latest changes.
+  #p.extra_deps     - An array of rubygem dependencies.
+  #p.spec_extras    - A hash of extra values to set in the gemspec.
+end
 
 # Run the unit tests
 
@@ -57,8 +82,12 @@ task :rebuild_mysql_databases => [:drop_mysql_databases, :build_mysql_databases]
 
 desc 'Build the sqlite test databases'
 task :build_sqlite_databases do 
-  puts File.join(SCHEMA_PATH, 'sqlite.sql')
-  %x( sqlite3 test.db < test/fixtures/db_definitions/sqlite.sql )
+  # puts File.join(SCHEMA_PATH, 'sqlite.sql')
+  # %x( sqlite3 test.db < test/fixtures/db_definitions/sqlite.sql )
+  file = File.join(SCHEMA_PATH, 'sqlite.sql')
+  cmd = "sqlite3 test.db < #{file}"
+  puts cmd
+  %x( #{cmd} )
 end
 
 desc 'Drop the sqlite test databases'
@@ -83,91 +112,22 @@ end
 desc 'Rebuild the PostgreSQL test databases'
 task :rebuild_postgresql_databases => [:drop_postgresql_databases, :build_postgresql_databases]
 
-# Generate the RDoc documentation
 
-Rake::RDocTask.new { |rdoc|
-  rdoc.rdoc_dir = 'doc'
-  rdoc.title    = "Dr Nic's Magic Models - Invisible validations, assocations and Active Record models themselves!"
-  rdoc.options << '--line-numbers' << '--inline-source' << '-A cattr_accessor=object'
-  rdoc.template = "#{ENV['template']}.rb" if ENV['template']
-  rdoc.rdoc_files.include('README', 'CHANGELOG')
-  rdoc.rdoc_files.include('lib/**/*.rb')
-}
-
-# Enhance rdoc task to copy referenced images also
-task :rdoc do
-  FileUtils.mkdir_p "doc/files/examples/"
+desc 'Generate website files'
+task :website_generate do
+  sh %{ ruby scripts/txt2html website/index.txt > website/index.html }
+  sh %{ ruby scripts/txt2js website/version.txt > website/version.js }
+  sh %{ ruby scripts/txt2js website/version-raw.txt > website/version-raw.js }
 end
 
-
-# Create compressed packages
-
-dist_dirs = [ "lib", "test", "examples", "website", "scripts"]
-
-spec = Gem::Specification.new do |s|
-  s.name = PKG_NAME
-  s.version = PKG_VERSION
-  s.summary = "Invisible validations, assocations and Active Record models themselves!"
-  s.description = %q{Associations and validations are automagically available to your ActiveRecord models. Model classes themselves are automagically generated if you haven't defined them already!}
-
-  s.files = [ "Rakefile", "install.rb", "README", "CHANGELOG" ]
-  dist_dirs.each do |dir|
-    s.files = s.files + Dir.glob( "#{dir}/**/*" ).delete_if { |item| item.include?( "\.svn" ) }
-  end
-
-  s.require_path = 'lib'
-  s.autorequire = 'dr_nic_magic_models'
-
-  s.has_rdoc = true
-  s.extra_rdoc_files = %w( README )
-  s.rdoc_options.concat ['--main',  'README']
-  
-  s.author = "Dr Nic Williams"
-  s.email = "drnicwilliams@gmail.com"
-  s.homepage = "http://magicmodels.rubyforge.org"
-  s.rubyforge_project = "magicmodels"
-end
-  
-Rake::GemPackageTask.new(spec) do |p|
-  p.gem_spec = spec
-  p.need_tar = false
-  p.need_zip = false
+desc 'Upload website files to rubyforge'
+task :website_upload do
+  config = YAML.load(File.read(File.expand_path("~/.rubyforge/user-config.yml")))
+  host = "#{config["username"]}@rubyforge.org"
+  remote_dir = "/var/www/gforge-projects/#{RUBYFORGE_PROJECT}/#{GEM_NAME}"
+  local_dir = 'website'
+  sh %{rsync -av --delete #{local_dir}/ #{host}:#{remote_dir}}
 end
 
-task :lines do
-  lines, codelines, total_lines, total_codelines = 0, 0, 0, 0
-
-  for file_name in FileList["lib/**/*.rb"]
-    next if file_name =~ /vendor/
-    f = File.open(file_name)
-
-    while line = f.gets
-      lines += 1
-      next if line =~ /^\s*$/
-      next if line =~ /^\s*#/
-      codelines += 1
-    end
-    puts "L: #{sprintf("%4d", lines)}, LOC #{sprintf("%4d", codelines)} | #{file_name}"
-    
-    total_lines     += lines
-    total_codelines += codelines
-    
-    lines, codelines = 0, 0
-  end
-
-  puts "Total: Lines #{total_lines}, LOC #{total_codelines}"
-end
-
-
-# Publishing ------------------------------------------------------
-
-desc "Publish the release files to RubyForge."
-task :release => [ :package ] do
-  `ruby scripts/rubyforge login`
-
-  for ext in %w( gem tgz zip )
-    release_command = "ruby scripts/rubyforge add_release #{PKG_NAME} #{PKG_NAME} 'REL #{PKG_VERSION}' pkg/#{PKG_NAME}-#{PKG_VERSION}.#{ext}"
-    puts release_command
-    system(release_command)
-  end
-end
+desc 'Generate and upload website files'
+task :website => [:website_generate, :website_upload]

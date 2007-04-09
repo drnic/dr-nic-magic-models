@@ -1,10 +1,5 @@
 h1. Dr Nic's Magic Models
 
-
-<blockquote>
-*conjure*  1. To create events that appear to be magical<br />
-- "David Copperfield":http://www.dcopperfield.com/ website
-</blockquote>
 If you've used Ruby on Rails you'll have written at least one model class like this:
 
 <pre syntax='ruby'>
@@ -39,15 +34,15 @@ class Person < ActiveRecord::Base; end
 or, if you read right to the end of this page, this...
 
 <pre syntax='ruby'>
-
+# Go fish.
 </pre>
 
 Magic and mystery abound. All for you. Impress your friends, amaze your mother.
 
-NOTE: The gratuitous use of *Dr Nic's* in the name should only enhance the mystical magicery,
+NOTE: The gratuitous use of *Dr Nic's* in the name should only enhance the mystical magikery,
 for magic needs a magician; and I love magic. I always wanted to create my own magic trick.
-So I shall be the magician for the sake of magic itself. I look a bit like Harry Potter
-if Harry were 31 and better dressed.
+So I shall be the magician for the sake of magic itself. I look a bit like Harry Potter too,
+if Harry were 32 and better dressed.
 
 h2. Installation
 
