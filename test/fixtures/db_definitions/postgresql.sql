@@ -53,4 +53,3 @@ ALTER TABLE "group_tag"
   
 ALTER TABLE "adjectives_fun_users"
   ADD FOREIGN KEY ("adjective_id") REFERENCES "adjectives" ("id") ON DELETE CASCADE;    
-  

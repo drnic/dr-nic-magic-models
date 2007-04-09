@@ -78,7 +78,6 @@ module DrNicMagicModels::MagicModel
         pair[table_name] = fkc if not fkc.blank?
         pair
       end
-      p fkc
       if not fkc.blank?
         # assumes there is only one table found - that schema doesn't have a singular and plural table of same name
         foreign_key = fkc.values.first.find {|fk| fk.reference_table == self.class.table_name}
