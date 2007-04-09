@@ -1,4 +1,5 @@
 CHANGELOG
+History.txt
 Manifest.txt
 README
 Rakefile
@@ -32,7 +33,6 @@ test/fixtures/adjectives.yml
 test/fixtures/adjectives_fun_users.yml
 test/fixtures/db_definitions/mysql.drop.sql
 test/fixtures/db_definitions/mysql.sql
-test/fixtures/db_definitions/postgresql.drop.sql
 test/fixtures/db_definitions/postgresql.sql
 test/fixtures/db_definitions/sqlite.sql
 test/fixtures/fun_users.yml
