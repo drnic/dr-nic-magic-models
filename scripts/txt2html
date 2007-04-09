@@ -1,9 +1,10 @@
 #!/usr/bin/env ruby
 
+require 'rubygems'
 require 'redcloth'
 require 'syntax/convertors/html'
 require 'erb'
-require '../lib/dr_nic_magic_models/version.rb'
+require File.dirname(__FILE__) + '/../lib/dr_nic_magic_models/version.rb'
 
 version  = DrNicMagicModels::VERSION::STRING
 download = 'http://rubyforge.org/projects/magicmodels'
@@ -34,7 +35,7 @@ end
 
 if ARGV.length >= 1
   src, template = ARGV
-  template ||= 'template.rhtml'
+  template ||= File.dirname(__FILE__) + '/../website/template.rhtml'
 else
   puts("Usage: #{File.split($0).last} source.txt [template.rhtml] > output.html")
   exit!
