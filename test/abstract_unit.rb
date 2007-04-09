@@ -20,7 +20,6 @@ class Test::Unit::TestCase #:nodoc:
   self.use_transactional_fixtures = true #(ENV['AR_NO_TX_FIXTURES'] != "yes")
 
   def create_fixtures(*table_names, &block)
-    puts "Creating fixtures: #{table_names}"
     Fixtures.create_fixtures(File.dirname(__FILE__) + "/fixtures/", table_names, {}, &block)
   end
   

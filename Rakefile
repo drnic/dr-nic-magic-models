@@ -66,15 +66,15 @@ SCHEMA_PATH = File.join(File.dirname(__FILE__), *%w(test fixtures db_definitions
 desc 'Build the MySQL test databases'
 task :build_mysql_databases do 
   puts File.join(SCHEMA_PATH, 'mysql.sql')
-  %x( mysqladmin -u root create "#{PKG_NAME}_unittest" )
-  cmd = "mysql -u root #{PKG_NAME}_unittest < \"#{File.join(SCHEMA_PATH, 'mysql.sql')}\""
+  %x( mysqladmin -u root create "#{GEM_NAME}_unittest" )
+  cmd = "mysql -u root #{GEM_NAME}_unittest < \"#{File.join(SCHEMA_PATH, 'mysql.sql')}\""
   puts "#{cmd}\n"
   %x( #{cmd} )
 end
 
 desc 'Drop the MySQL test databases'
 task :drop_mysql_databases do 
-  %x( mysqladmin -u root -f drop "#{PKG_NAME}_unittest" )
+  %x( mysqladmin -u root -f drop "#{GEM_NAME}_unittest" )
 end
 
 desc 'Rebuild the MySQL test databases'
@@ -100,13 +100,13 @@ task :rebuild_sqlite_databases => [:drop_sqlite_databases, :build_sqlite_databas
 
 desc 'Build the PostgreSQL test databases'
 task :build_postgresql_databases do 
-  %x( createdb -U postgres "#{PKG_NAME}_unittest" )
-  %x( psql "#{PKG_NAME}_unittest" postgres -f "#{File.join(SCHEMA_PATH, 'postgresql.sql')}" )
+  %x( createdb "#{GEM_NAME}_unittest" )
+  %x( psql "#{GEM_NAME}_unittest" -f "#{File.join(SCHEMA_PATH, 'postgresql.sql')}" )
 end
 
 desc 'Drop the PostgreSQL test databases'
 task :drop_postgresql_databases do 
-  %x( dropdb -U postgres "#{PKG_NAME}_unittest" )
+  %x( dropdb "#{GEM_NAME}_unittest" )
 end
 
 desc 'Rebuild the PostgreSQL test databases'

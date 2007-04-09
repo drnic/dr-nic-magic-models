@@ -7,8 +7,6 @@ db1 = "dr_nic_magic_models_unittest"
 
 ActiveRecord::Base.establish_connection(
   :adapter  => "postgresql",
-  :username => "postgres",
-  :password => "postgres",
   :encoding => "utf8",
   :database => db1
 )

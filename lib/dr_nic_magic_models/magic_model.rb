@@ -78,13 +78,18 @@ module DrNicMagicModels::MagicModel
         pair[table_name] = fkc if not fkc.blank?
         pair
       end
+      p fkc
       if not fkc.blank?
         # assumes there is only one table found - that schema doesn't have a singular and plural table of same name
-        foreign_key = fkc.values.first.find {|fk| fk.reference_table == self.class.table_name}.foreign_key
-        table_name = fkc.keys.first
-        klass = Module.const_get table_name.singularize.camelize rescue nil
-        options = {:foreign_key => foreign_key, :class_name => klass.name}
-      else
+        foreign_key = fkc.values.first.find {|fk| fk.reference_table == self.class.table_name}
+        if foreign_key
+          foreign_key = foreign_key.foreign_key
+          table_name = fkc.keys.first
+          klass = Module.const_get table_name.singularize.camelize rescue nil
+          options = {:foreign_key => foreign_key, :class_name => klass.name}
+        end
+      end
+      unless foreign_key
         klass = Module.const_get method.to_s.downcase.singularize.camelize rescue nil
         foreign_key = klass.columns.select {|column| column.name == self.class.name.foreign_key}.first if klass
       end
@@ -113,6 +118,7 @@ module DrNicMagicModels::MagicModel
     end
     
     def add_has_some_through(join_table, method, *args, &block)
+      puts "#{self.class}.has_many #{method.inspect}, #{join_table.inspect}, #{args.inspect}"
       self.class.send 'has_many', method, :through => join_table.to_sym
       self.send(method, *args, &block)
     end

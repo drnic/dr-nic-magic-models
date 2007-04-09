@@ -11,8 +11,8 @@ class InvisibleModelAssocTest < Test::Unit::TestCase
     @membership = GroupMembership.find(1)
   end
   
-  def test_hatbm  
-    assert @user.adjectives == [Adjective.find(1)]
+  def test_hatbm
+    assert_equal([Adjective.find(1)], @user.adjectives)
   end
     
   def test_fk
