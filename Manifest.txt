@@ -17,8 +17,6 @@ lib/dr_nic_magic_models/validations.rb
 lib/dr_nic_magic_models/version.rb
 lib/module.rb
 lib/rails.rb
-scripts/http-access2-2.0.6.gem
-scripts/rubyforge-orig
 scripts/txt2html
 scripts/txt2js
 test.db
