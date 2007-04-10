@@ -4,7 +4,9 @@
         + Support for dynamic loading of classes again
 + 2 new DB supported:
         + Tests run on sqlite (no fk support)
-				+ Tests run on postgresql (fk support)
+        + Tests run on postgresql (fk support)
+            + Including FK bug fix
 + Many fixes that I've lost track of
 + History.txt to keep track of changes like these
 + Using Hoe for Rakefile
++ Use modules to specify common table prefixes
