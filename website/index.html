@@ -121,11 +121,11 @@ require 'dr_nic_magic_models'
 	<h2>David Copperfield eat your Ruby-crusted heart out</h2>
 
 
-	<p>Let&#8217;s demonstrate the magical mystery in all its full-stage glory. Create a Ruby on Rails app:</p>
+	<p>Let&#8217;s demonstrate the magical mystery in all its full-stage glory. Create a Ruby on Rails app (example uses sqlite3, but use your favourite databas):</p>
 
 
 	<p><pre class="syntax">
-<span class="ident">rails</span> <span class="ident">magic_show</span>
+<span class="ident">rails</span> <span class="ident">magic_show</span> <span class="punct">-</span><span class="ident">d</span> <span class="ident">sqlite3</span>
 <span class="ident">cd</span> <span class="ident">magic_show</span>
 <span class="ident">ruby</span> <span class="ident">script</span><span class="punct">/</span><span class="ident">generate</span> <span class="ident">model</span> <span class="constant">Person</span>
 <span class="ident">ruby</span> <span class="ident">script</span><span class="punct">/</span><span class="ident">generate</span> <span class="ident">model</span> <span class="constant">Group</span>
@@ -170,15 +170,9 @@ with:
 </pre></p>
 
 
-Now create your database. For MySql:
-<pre>
-mysqladmin -u root create magic_show_development
-mysqladmin -u root create magic_show_test
-</pre>
-
 And run your migrations to create the three tables:
 <pre>
-rake migrate
+rake db:migrate
 </pre>
 
 	<h2>And now for some <a href="http://en.wikipedia.org/wiki/List_of_conjuring_terms">woofle dust</a> ...</h2>
@@ -358,7 +352,7 @@ other stories and things.</p>
 	<p>Comments are welcome. Send an email to <a href="mailto:drnicwilliams@gmail.com">Dr Nic Williams</a>
 or via his blog at <a href="http://www.drnicwilliams.com">http://www.drnicwilliams.com</a></p>
     <p class="coda">
-      <a href="mailto:drnicwilliams@gmail.com">Dr Nic</a>, 9th April 2007<br>
+      <a href="mailto:drnicwilliams@gmail.com">Dr Nic</a>, 10th April 2007<br>
       Theme extended from <a href="http://rb2js.rubyforge.org/">Paul Battley</a>
     </p>
 </div>

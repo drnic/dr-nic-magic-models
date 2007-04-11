@@ -1,7 +1,7 @@
 require 'abstract_unit'
 
 module MagicGroup
-  magic_module 'group_'
+  magic_module :table_name_prefix => 'group_'
 end
 
 class MagicModuleTest < Test::Unit::TestCase

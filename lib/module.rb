@@ -13,21 +13,21 @@ class Module
     superklass = @magic_schema.superklass || ActiveRecord::Base
     klass = create_class(class_id, superklass) do
       set_table_name table_name
-      include DrNicMagicModels::MagicModel
-      extend DrNicMagicModels::Validations
+      # include DrNicMagicModels::MagicModel
+      # extend DrNicMagicModels::Validations
     end
     klass.generate_validations # need to call this AFTER the class name has been assigned
     @magic_schema.inflector.post_class_creation klass
     klass
   end
   
-  def magic_module(table_name_prefix)
-    self.instance_variable_set "@table_name_prefix", table_name_prefix
+  def magic_module(options)
+    self.instance_variable_set "@table_name_prefix", options[:table_name_prefix] if options[:table_name_prefix]
   end
 
   private
   def create_class(class_name, superclass, &block)
     klass = Class.new superclass, &block
-    Object.const_set class_name, klass
+    self.const_set class_name, klass
   end
 end

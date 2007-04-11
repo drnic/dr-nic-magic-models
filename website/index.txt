@@ -66,10 +66,10 @@ Your application is now blessed with magical mystery.
 
 h2. David Copperfield eat your Ruby-crusted heart out
 
-Let's demonstrate the magical mystery in all its full-stage glory. Create a Ruby on Rails app:
+Let's demonstrate the magical mystery in all its full-stage glory. Create a Ruby on Rails app (example uses sqlite3, but use your favourite databas):
 
 <pre syntax="ruby">
-rails magic_show
+rails magic_show -d sqlite3
 cd magic_show
 ruby script/generate model Person
 ruby script/generate model Group
@@ -110,18 +110,12 @@ and <code>003_create_memberships.rb</code> with:
     end
 </pre>
 
-Now create your database. For MySql:
-<pre>
-mysqladmin -u root create magic_show_development
-mysqladmin -u root create magic_show_test
-</pre>
-
 And run your migrations to create the three tables:
 <pre>
-rake migrate
+rake db:migrate
 </pre>
 
-h2. And now for some "woofle dust":http://en.wikipedia.org/wiki/List_of_conjuring_terms ...
+h3. And now for some "woofle dust":http://en.wikipedia.org/wiki/List_of_conjuring_terms ...
 
 At the end of <code>config/environment.rb</code> add the following line:
 
@@ -200,7 +194,7 @@ The final association trick is a ripper. Automatic generation of <code>has_many 
 "id"=>"1", "email"=>"drnicwilliams@gmail.com"}>]
 </pre>
 
-h2. Drum roll...
+h3. Drum roll...
 
 Ladies and gentlemen. For my final feat of magical mastery, I'll ask you to do
 something you've never done before. This illusion is akin to the "floating lady":http://www.toytent.com/Posters/985.html
@@ -234,9 +228,20 @@ You applaud loudly, but watch for more...
 => [<Group:0x390df60 @attributes={"name"=>"Magic Models Forum", "id"=>"1", "description"=>nil}>]
 </pre>
 
-h2. Tada!
+h3. Tada!
 
 The end.
+
+h3. Use modules to scope your magic
+
+Only want to pick up tables starting with <code>blog_</code>?
+
+<pre syntax="ruby">module Blog
+	magic_module :table_name_prefix => 'blog_'
+end
+
+Blog::Post.table_name #	=> 'blog_posts'
+</pre>
 
 h2. Dr Nic's Blog
 

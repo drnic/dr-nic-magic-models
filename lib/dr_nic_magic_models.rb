@@ -28,4 +28,7 @@ require 'connection_adapters/postgresql_adapter'
 # load the schema
 # TODO - add this to README - DrNicMagicModels::Schema.load_schema(true)
 
-
+class ActiveRecord::Base
+  include DrNicMagicModels::MagicModel
+  extend DrNicMagicModels::Validations
+end
