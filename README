@@ -1,7 +1,6 @@
 See http://magicmodels.rubyforge.org/dr_nic_magic_models for pretty README
 
 Ugly README (from website/index.txt in Textile format):
-
 h1. Dr Nic's Magic Models
 
 If you've used Ruby on Rails you'll have written at least one model class like this:
@@ -70,10 +69,10 @@ Your application is now blessed with magical mystery.
 
 h2. David Copperfield eat your Ruby-crusted heart out
 
-Let's demonstrate the magical mystery in all its full-stage glory. Create a Ruby on Rails app:
+Let's demonstrate the magical mystery in all its full-stage glory. Create a Ruby on Rails app (example uses sqlite3, but use your favourite databas):
 
 <pre syntax="ruby">
-rails magic_show
+rails magic_show -d sqlite3
 cd magic_show
 ruby script/generate model Person
 ruby script/generate model Group
@@ -114,18 +113,12 @@ and <code>003_create_memberships.rb</code> with:
     end
 </pre>
 
-Now create your database. For MySql:
-<pre>
-mysqladmin -u root create magic_show_development
-mysqladmin -u root create magic_show_test
-</pre>
-
 And run your migrations to create the three tables:
 <pre>
-rake migrate
+rake db:migrate
 </pre>
 
-h2. And now for some "woofle dust":http://en.wikipedia.org/wiki/List_of_conjuring_terms ...
+h3. And now for some "woofle dust":http://en.wikipedia.org/wiki/List_of_conjuring_terms ...
 
 At the end of <code>config/environment.rb</code> add the following line:
 
@@ -146,6 +139,20 @@ end
 
 Nothing suspicious here. We have no validations and no associations. Just some plain old model classes.
 
+UPDATE: To turn on magic validations, you now need to invoke <code>generate_validations</code> on defined classes. So, update your model classes:
+
+<pre syntax="ruby">
+class Person < ActiveRecord::Base
+  generate_validations
+end
+class Group < ActiveRecord::Base
+  generate_validations
+end
+class Membership < ActiveRecord::Base
+  generate_validations
+end
+</pre>
+
 For this trick, we'll need an ordinary console session. Any old one lying around the house will do.
 
 <pre>
@@ -156,22 +163,24 @@ Now a normal model class is valid until you explicitly add <code>validates_xxx</
 With Dr Nic's Magic Models:
 
 <pre syntax="ruby">
->> person = Person.new
+person = Person.new
 => #<Person:0x393e0f8 @attributes={"lastname"=>"", "firstname"=>"", "email"=>""}, @new_record=true>
->> person.valid?
+person.valid?
 => false
->> person.errors
-=> <ActiveRecord::Errors:0x3938b18 @errors={"firstname"=>["can't be blank"], 
-"lastname"=>["can't be blank"], "email"=>["can't be blank"]}, 
-@base=<Person:0x393e0f8 @errors=<ActiveRecord::Errors:0x3938b18 ...>, 
-@attributes={"lastname"=>"", "firstname"=>"", "email"=>""}, @new_record=true>>
+person.errors
+=> #<ActiveRecord::Errors:0x3537b38 @errors={
+	"firstname"=>["can't be blank", "is too long (maximum is 255 characters)"], 
+	"lastname"=>["can't be blank", "is too long (maximum is 255 characters)"], 
+	"email"=>["can't be blank", "is too long (maximum is 255 characters)"]},
+	 @base=#<Person:0x3538bf0 @errors=#<ActiveRecord::Errors:0x3537b38 ...>, @new_record=true, 
+		@attributes={"lastname"=>nil, "firstname"=>nil, "email"=>nil}>>
 </pre>
 
-*Kapoow!* Instant validation!
+*Kapoow!* Instant validation! (NOTE: not as instant as it used to be - remember - you need to call <code>generate_validations</code> on each class as required)
 
 Because you specified the three columns as <code>:null => false</code>,
-your ActiveRecord models will now automatically generated <code>validates_presence_of</code>
-for each non-null field.
+your ActiveRecord models will now automagically generated <code>validates_presence_of</code> 
+for each non-null field, plus several other validations (since version 0.8.0).
 
 Ok, we're just warming up.
 
@@ -181,15 +190,15 @@ demonstrated above) to have the brilliantly simple support that Rails/ActiveReco
 Let's just watch what Dr Nic's Magic Models can do without any effort at all...
 
 <pre syntax="ruby">
->> person = Person.create(:firstname => "Nic", :lastname => "Williams", :email => "drnicwilliams@gmail.com")
->> group = Group.create(:name => "Magic Models Forum", :description => "http://groups.google.com/magicmodels")
->> membership = Membership.create(:person_id => person, :group_id => group)
->> person.memberships.length
+person = Person.create(:firstname => "Nic", :lastname => "Williams", :email => "drnicwilliams@gmail.com")
+group = Group.create(:name => "Magic Models Forum", :description => "http://groups.google.com/magicmodels")
+membership = Membership.create(:person => person, :group => group)
+person.memberships.length
 => 1
->> membership.person
+membership.person
 => <Person:0x38898e8 @attributes={"lastname"=>"Williams", "firstname"=>"Nic", 
 "id"=>"1", "email"=>"drnicwilliams@gmail.com"}>
->> group.memberships
+group.memberships
 => [<Membership:0x3c8cd70 @attributes={"group_id"=>"1", "id"=>"1", "person_id"=>"1"}>]
 </pre>
 
@@ -204,7 +213,7 @@ The final association trick is a ripper. Automatic generation of <code>has_many 
 "id"=>"1", "email"=>"drnicwilliams@gmail.com"}>]
 </pre>
 
-h2. Drum roll...
+h3. Drum roll...
 
 Ladies and gentlemen. For my final feat of magical mastery, I'll ask you to do
 something you've never done before. This illusion is akin to the "floating lady":http://www.toytent.com/Posters/985.html
@@ -214,6 +223,8 @@ Exit your console session.
 
 DELETE your three model classes: <code>person.rb, group.rb, and membership.rb</code> from the 
 <code>app/models</code> folder. (You can always get them back via the model generator... be fearless!)
+
+<pre>rm app/models/*.rb</pre>
 
 Re-launch your console.
 
@@ -229,18 +240,33 @@ Be prepared to applaud loudly...
 You applaud loudly, but watch for more...
 
 <pre syntax="ruby">
+>> Person.new.valid?
+=> false
 >> person = Person.find(1)
 => <Person:0x3958930 @attributes={"lastname"=>"Williams", "firstname"=>"Nic", 
 "id"=>"1", "email"=>"drnicwilliams@gmail.com"}>
+>> person.valid?
+=> true
 >> person.memberships
 => [<Membership:0x393a000 @attributes={"group_id"=>"1", "id"=>"1", "person_id"=>"1"}>]
 >> person.groups
 => [<Group:0x390df60 @attributes={"name"=>"Magic Models Forum", "id"=>"1", "description"=>nil}>]
 </pre>
 
-h2. Tada!
+h3. Tada!
 
 The end.
+
+h3. Use modules to scope your magic
+
+Only want to pick up tables starting with <code>blog_</code>?
+
+<pre syntax="ruby">module Blog
+  magic_module :table_name_prefix => 'blog_'
+end
+
+Blog::Post.table_name #	=> 'blog_posts'
+</pre>
 
 h2. Dr Nic's Blog
 

@@ -34,11 +34,11 @@
 <div id="main">
 	<p><a href="/">&#x21A9; More Magic</a></p>
 
+	  <div id="version" class="clickable" onclick='document.location = "http://rubyforge.org/projects/magicmodels"; return false'>
+	    Get Version
+	    <a id="version_num" href="http://rubyforge.org/projects/magicmodels" class="numbers"></a>
+	  </div>
     <h1>Dr Nic&#8217;s Magic Models</h1>
-    <div id="version" class="clickable" onclick='document.location = "http://rubyforge.org/projects/magicmodels"; return false'>
-      Get Version
-      <a id="version_num" href="http://rubyforge.org/projects/magicmodels" class="numbers"></a>
-    </div>
     <p>If you&#8217;ve used Ruby on Rails you&#8217;ll have written at least one model class like this:</p>
 
 
@@ -175,7 +175,7 @@ And run your migrations to create the three tables:
 rake db:migrate
 </pre>
 
-	<h2>And now for some <a href="http://en.wikipedia.org/wiki/List_of_conjuring_terms">woofle dust</a> ...</h2>
+	<h3>And now for some <a href="http://en.wikipedia.org/wiki/List_of_conjuring_terms">woofle dust</a> ...</h3>
 
 
 	<p>At the end of <code>config/environment.rb</code> add the following line:</p>
@@ -201,6 +201,22 @@ require 'dr_nic_magic_models'
 	<p>Nothing suspicious here. We have no validations and no associations. Just some plain old model classes.</p>
 
 
+	<p><span class="caps">UPDATE</span>: To turn on magic validations, you now need to invoke <code>generate_validations</code> on defined classes. So, update your model classes:</p>
+
+
+	<p><pre class="syntax">
+<span class="keyword">class </span><span class="class">Person</span> <span class="punct">&lt;</span> <span class="constant">ActiveRecord</span><span class="punct">::</span><span class="constant">Base</span>
+  <span class="ident">generate_validations</span>
+<span class="keyword">end</span>
+<span class="keyword">class </span><span class="class">Group</span> <span class="punct">&lt;</span> <span class="constant">ActiveRecord</span><span class="punct">::</span><span class="constant">Base</span>
+  <span class="ident">generate_validations</span>
+<span class="keyword">end</span>
+<span class="keyword">class </span><span class="class">Membership</span> <span class="punct">&lt;</span> <span class="constant">ActiveRecord</span><span class="punct">::</span><span class="constant">Base</span>
+  <span class="ident">generate_validations</span>
+<span class="keyword">end</span>
+</pre></p>
+
+
 	<p>For this trick, we&#8217;ll need an ordinary console session. Any old one lying around the house will do.</p>
 
 
@@ -213,24 +229,26 @@ With Dr Nic&#8217;s Magic Models:</p>
 
 
 	<p><pre class="syntax">
-<span class="punct">&gt;&gt;</span> <span class="ident">person</span> <span class="punct">=</span> <span class="constant">Person</span><span class="punct">.</span><span class="ident">new</span>
+<span class="ident">person</span> <span class="punct">=</span> <span class="constant">Person</span><span class="punct">.</span><span class="ident">new</span>
 <span class="punct">=&gt;</span> <span class="comment">#&lt;Person:0x393e0f8 @attributes={&quot;lastname&quot;=&gt;&quot;&quot;, &quot;firstname&quot;=&gt;&quot;&quot;, &quot;email&quot;=&gt;&quot;&quot;}, @new_record=true&gt;</span>
-<span class="punct">&gt;&gt;</span> <span class="ident">person</span><span class="punct">.</span><span class="ident">valid?</span>
+<span class="ident">person</span><span class="punct">.</span><span class="ident">valid?</span>
 <span class="punct">=&gt;</span> <span class="constant">false</span>
-<span class="punct">&gt;&gt;</span> <span class="ident">person</span><span class="punct">.</span><span class="ident">errors</span>
-<span class="punct">=&gt;</span> <span class="punct">&lt;</span><span class="constant">ActiveRecord</span><span class="punct">::</span><span class="constant">Errors</span><span class="punct">:</span><span class="number">0x3938b18</span> <span class="attribute">@errors</span><span class="punct">={&quot;</span><span class="string">firstname</span><span class="punct">&quot;=&gt;[&quot;</span><span class="string">can't be blank</span><span class="punct">&quot;],</span> 
-<span class="punct">&quot;</span><span class="string">lastname</span><span class="punct">&quot;=&gt;[&quot;</span><span class="string">can't be blank</span><span class="punct">&quot;],</span> <span class="punct">&quot;</span><span class="string">email</span><span class="punct">&quot;=&gt;[&quot;</span><span class="string">can't be blank</span><span class="punct">&quot;]},</span> 
-<span class="attribute">@base</span><span class="punct">=&lt;</span><span class="constant">Person</span><span class="punct">:</span><span class="number">0x393e0f8</span> <span class="attribute">@errors</span><span class="punct">=&lt;</span><span class="constant">ActiveRecord</span><span class="punct">::</span><span class="constant">Errors</span><span class="punct">:</span><span class="number">0x3938b18</span> <span class="punct">...&gt;,</span> 
-<span class="attribute">@attributes</span><span class="punct">={&quot;</span><span class="string">lastname</span><span class="punct">&quot;=&gt;&quot;</span><span class="string"></span><span class="punct">&quot;,</span> <span class="punct">&quot;</span><span class="string">firstname</span><span class="punct">&quot;=&gt;&quot;</span><span class="string"></span><span class="punct">&quot;,</span> <span class="punct">&quot;</span><span class="string">email</span><span class="punct">&quot;=&gt;&quot;</span><span class="string"></span><span class="punct">&quot;},</span> <span class="attribute">@new_record</span><span class="punct">=</span><span class="constant">true</span><span class="punct">&gt;&gt;</span>
+<span class="ident">person</span><span class="punct">.</span><span class="ident">errors</span>
+<span class="punct">=&gt;</span> <span class="comment">#&lt;ActiveRecord::Errors:0x3537b38 @errors={</span>
+	<span class="punct">&quot;</span><span class="string">firstname</span><span class="punct">&quot;=&gt;[&quot;</span><span class="string">can't be blank</span><span class="punct">&quot;,</span> <span class="punct">&quot;</span><span class="string">is too long (maximum is 255 characters)</span><span class="punct">&quot;],</span> 
+	<span class="punct">&quot;</span><span class="string">lastname</span><span class="punct">&quot;=&gt;[&quot;</span><span class="string">can't be blank</span><span class="punct">&quot;,</span> <span class="punct">&quot;</span><span class="string">is too long (maximum is 255 characters)</span><span class="punct">&quot;],</span> 
+	<span class="punct">&quot;</span><span class="string">email</span><span class="punct">&quot;=&gt;[&quot;</span><span class="string">can't be blank</span><span class="punct">&quot;,</span> <span class="punct">&quot;</span><span class="string">is too long (maximum is 255 characters)</span><span class="punct">&quot;]},</span>
+	 <span class="attribute">@base</span><span class="punct">=</span><span class="comment">#&lt;Person:0x3538bf0 @errors=#&lt;ActiveRecord::Errors:0x3537b38 ...&gt;, @new_record=true, </span>
+		<span class="attribute">@attributes</span><span class="punct">={&quot;</span><span class="string">lastname</span><span class="punct">&quot;=&gt;</span><span class="constant">nil</span><span class="punct">,</span> <span class="punct">&quot;</span><span class="string">firstname</span><span class="punct">&quot;=&gt;</span><span class="constant">nil</span><span class="punct">,</span> <span class="punct">&quot;</span><span class="string">email</span><span class="punct">&quot;=&gt;</span><span class="constant">nil</span><span class="punct">}&gt;&gt;</span>
 </pre></p>
 
 
-	<p><strong>Kapoow!</strong> Instant validation!</p>
+	<p><strong>Kapoow!</strong> Instant validation! (NOTE: not as instant as it used to be &#8211; remember &#8211; you need to call <code>generate_validations</code> on each class as required)</p>
 
 
 	<p>Because you specified the three columns as <code>:null =&gt; false</code>,
-your ActiveRecord models will now automatically generated <code>validates_presence_of</code>
-for each non-null field.</p>
+your ActiveRecord models will now automagically generated <code>validates_presence_of</code> 
+for each non-null field, plus several other validations (since version 0.8.0).</p>
 
 
 	<p>Ok, we&#8217;re just warming up.</p>
@@ -244,15 +262,15 @@ demonstrated above) to have the brilliantly simple support that Rails/ActiveReco
 
 
 	<p><pre class="syntax">
-<span class="punct">&gt;&gt;</span> <span class="ident">person</span> <span class="punct">=</span> <span class="constant">Person</span><span class="punct">.</span><span class="ident">create</span><span class="punct">(</span><span class="symbol">:firstname</span> <span class="punct">=&gt;</span> <span class="punct">&quot;</span><span class="string">Nic</span><span class="punct">&quot;,</span> <span class="symbol">:lastname</span> <span class="punct">=&gt;</span> <span class="punct">&quot;</span><span class="string">Williams</span><span class="punct">&quot;,</span> <span class="symbol">:email</span> <span class="punct">=&gt;</span> <span class="punct">&quot;</span><span class="string">drnicwilliams@gmail.com</span><span class="punct">&quot;)</span>
-<span class="punct">&gt;&gt;</span> <span class="ident">group</span> <span class="punct">=</span> <span class="constant">Group</span><span class="punct">.</span><span class="ident">create</span><span class="punct">(</span><span class="symbol">:name</span> <span class="punct">=&gt;</span> <span class="punct">&quot;</span><span class="string">Magic Models Forum</span><span class="punct">&quot;,</span> <span class="symbol">:description</span> <span class="punct">=&gt;</span> <span class="punct">&quot;</span><span class="string">http://groups.google.com/magicmodels</span><span class="punct">&quot;)</span>
-<span class="punct">&gt;&gt;</span> <span class="ident">membership</span> <span class="punct">=</span> <span class="constant">Membership</span><span class="punct">.</span><span class="ident">create</span><span class="punct">(</span><span class="symbol">:person_id</span> <span class="punct">=&gt;</span> <span class="ident">person</span><span class="punct">,</span> <span class="symbol">:group_id</span> <span class="punct">=&gt;</span> <span class="ident">group</span><span class="punct">)</span>
-<span class="punct">&gt;&gt;</span> <span class="ident">person</span><span class="punct">.</span><span class="ident">memberships</span><span class="punct">.</span><span class="ident">length</span>
+<span class="ident">person</span> <span class="punct">=</span> <span class="constant">Person</span><span class="punct">.</span><span class="ident">create</span><span class="punct">(</span><span class="symbol">:firstname</span> <span class="punct">=&gt;</span> <span class="punct">&quot;</span><span class="string">Nic</span><span class="punct">&quot;,</span> <span class="symbol">:lastname</span> <span class="punct">=&gt;</span> <span class="punct">&quot;</span><span class="string">Williams</span><span class="punct">&quot;,</span> <span class="symbol">:email</span> <span class="punct">=&gt;</span> <span class="punct">&quot;</span><span class="string">drnicwilliams@gmail.com</span><span class="punct">&quot;)</span>
+<span class="ident">group</span> <span class="punct">=</span> <span class="constant">Group</span><span class="punct">.</span><span class="ident">create</span><span class="punct">(</span><span class="symbol">:name</span> <span class="punct">=&gt;</span> <span class="punct">&quot;</span><span class="string">Magic Models Forum</span><span class="punct">&quot;,</span> <span class="symbol">:description</span> <span class="punct">=&gt;</span> <span class="punct">&quot;</span><span class="string">http://groups.google.com/magicmodels</span><span class="punct">&quot;)</span>
+<span class="ident">membership</span> <span class="punct">=</span> <span class="constant">Membership</span><span class="punct">.</span><span class="ident">create</span><span class="punct">(</span><span class="symbol">:person</span> <span class="punct">=&gt;</span> <span class="ident">person</span><span class="punct">,</span> <span class="symbol">:group</span> <span class="punct">=&gt;</span> <span class="ident">group</span><span class="punct">)</span>
+<span class="ident">person</span><span class="punct">.</span><span class="ident">memberships</span><span class="punct">.</span><span class="ident">length</span>
 <span class="punct">=&gt;</span> <span class="number">1</span>
-<span class="punct">&gt;&gt;</span> <span class="ident">membership</span><span class="punct">.</span><span class="ident">person</span>
+<span class="ident">membership</span><span class="punct">.</span><span class="ident">person</span>
 <span class="punct">=&gt;</span> <span class="punct">&lt;</span><span class="constant">Person</span><span class="punct">:</span><span class="number">0x38898e8</span> <span class="attribute">@attributes</span><span class="punct">={&quot;</span><span class="string">lastname</span><span class="punct">&quot;=&gt;&quot;</span><span class="string">Williams</span><span class="punct">&quot;,</span> <span class="punct">&quot;</span><span class="string">firstname</span><span class="punct">&quot;=&gt;&quot;</span><span class="string">Nic</span><span class="punct">&quot;,</span> 
 <span class="punct">&quot;</span><span class="string">id</span><span class="punct">&quot;=&gt;&quot;</span><span class="string">1</span><span class="punct">&quot;,</span> <span class="punct">&quot;</span><span class="string">email</span><span class="punct">&quot;=&gt;&quot;</span><span class="string">drnicwilliams@gmail.com</span><span class="punct">&quot;}&gt;</span>
-<span class="punct">&gt;&gt;</span> <span class="ident">group</span><span class="punct">.</span><span class="ident">memberships</span>
+<span class="ident">group</span><span class="punct">.</span><span class="ident">memberships</span>
 <span class="punct">=&gt;</span> <span class="punct">[&lt;</span><span class="constant">Membership</span><span class="punct">:</span><span class="number">0x3c8cd70</span> <span class="attribute">@attributes</span><span class="punct">={&quot;</span><span class="string">group_id</span><span class="punct">&quot;=&gt;&quot;</span><span class="string">1</span><span class="punct">&quot;,</span> <span class="punct">&quot;</span><span class="string">id</span><span class="punct">&quot;=&gt;&quot;</span><span class="string">1</span><span class="punct">&quot;,</span> <span class="punct">&quot;</span><span class="string">person_id</span><span class="punct">&quot;=&gt;&quot;</span><span class="string">1</span><span class="punct">&quot;}&gt;]</span>
 </pre></p>
 
@@ -269,7 +287,7 @@ demonstrated above) to have the brilliantly simple support that Rails/ActiveReco
 </pre></p>
 
 
-	<h2>Drum roll&#8230;</h2>
+	<h3>Drum roll&#8230;</h3>
 
 
 	<p>Ladies and gentlemen. For my final feat of magical mastery, I&#8217;ll ask you to do
@@ -282,6 +300,8 @@ illusion that has been passed down through generations of magicians.</p>
 
 <span class="caps">DELETE</span> your three model classes: <code>person.rb, group.rb, and membership.rb</code> from the 
 <code>app/models</code> folder. (You can always get them back via the model generator&#8230; be fearless!)
+
+<pre>rm app/models/*.rb</pre>
 
 	<p>Re-launch your console.</p>
 
@@ -302,9 +322,13 @@ illusion that has been passed down through generations of magicians.</p>
 
 
 	<p><pre class="syntax">
+<span class="punct">&gt;&gt;</span> <span class="constant">Person</span><span class="punct">.</span><span class="ident">new</span><span class="punct">.</span><span class="ident">valid?</span>
+<span class="punct">=&gt;</span> <span class="constant">false</span>
 <span class="punct">&gt;&gt;</span> <span class="ident">person</span> <span class="punct">=</span> <span class="constant">Person</span><span class="punct">.</span><span class="ident">find</span><span class="punct">(</span><span class="number">1</span><span class="punct">)</span>
 <span class="punct">=&gt;</span> <span class="punct">&lt;</span><span class="constant">Person</span><span class="punct">:</span><span class="number">0x3958930</span> <span class="attribute">@attributes</span><span class="punct">={&quot;</span><span class="string">lastname</span><span class="punct">&quot;=&gt;&quot;</span><span class="string">Williams</span><span class="punct">&quot;,</span> <span class="punct">&quot;</span><span class="string">firstname</span><span class="punct">&quot;=&gt;&quot;</span><span class="string">Nic</span><span class="punct">&quot;,</span> 
 <span class="punct">&quot;</span><span class="string">id</span><span class="punct">&quot;=&gt;&quot;</span><span class="string">1</span><span class="punct">&quot;,</span> <span class="punct">&quot;</span><span class="string">email</span><span class="punct">&quot;=&gt;&quot;</span><span class="string">drnicwilliams@gmail.com</span><span class="punct">&quot;}&gt;</span>
+<span class="punct">&gt;&gt;</span> <span class="ident">person</span><span class="punct">.</span><span class="ident">valid?</span>
+<span class="punct">=&gt;</span> <span class="constant">true</span>
 <span class="punct">&gt;&gt;</span> <span class="ident">person</span><span class="punct">.</span><span class="ident">memberships</span>
 <span class="punct">=&gt;</span> <span class="punct">[&lt;</span><span class="constant">Membership</span><span class="punct">:</span><span class="number">0x393a000</span> <span class="attribute">@attributes</span><span class="punct">={&quot;</span><span class="string">group_id</span><span class="punct">&quot;=&gt;&quot;</span><span class="string">1</span><span class="punct">&quot;,</span> <span class="punct">&quot;</span><span class="string">id</span><span class="punct">&quot;=&gt;&quot;</span><span class="string">1</span><span class="punct">&quot;,</span> <span class="punct">&quot;</span><span class="string">person_id</span><span class="punct">&quot;=&gt;&quot;</span><span class="string">1</span><span class="punct">&quot;}&gt;]</span>
 <span class="punct">&gt;&gt;</span> <span class="ident">person</span><span class="punct">.</span><span class="ident">groups</span>
@@ -312,10 +336,24 @@ illusion that has been passed down through generations of magicians.</p>
 </pre></p>
 
 
-	<h2>Tada!</h2>
+	<h3>Tada!</h3>
 
 
 	<p>The end.</p>
+
+
+	<h3>Use modules to scope your magic</h3>
+
+
+	<p>Only want to pick up tables starting with <code>blog_</code>?</p>
+
+
+	<p><pre class="syntax"><span class="keyword">module </span><span class="module">Blog</span>
+  <span class="ident">magic_module</span> <span class="symbol">:table_name_prefix</span> <span class="punct">=&gt;</span> <span class="punct">'</span><span class="string">blog_</span><span class="punct">'</span>
+<span class="keyword">end</span>
+
+<span class="constant">Blog</span><span class="punct">::</span><span class="constant">Post</span><span class="punct">.</span><span class="ident">table_name</span> <span class="comment">#	=&gt; 'blog_posts'</span>
+</pre></p>
 
 
 	<h2>Dr Nic&#8217;s Blog</h2>
@@ -352,7 +390,7 @@ other stories and things.</p>
 	<p>Comments are welcome. Send an email to <a href="mailto:drnicwilliams@gmail.com">Dr Nic Williams</a>
 or via his blog at <a href="http://www.drnicwilliams.com">http://www.drnicwilliams.com</a></p>
     <p class="coda">
-      <a href="mailto:drnicwilliams@gmail.com">Dr Nic</a>, 10th April 2007<br>
+      <a href="mailto:drnicwilliams@gmail.com">Dr Nic</a>, 11th April 2007<br>
       Theme extended from <a href="http://rb2js.rubyforge.org/">Paul Battley</a>
     </p>
 </div>

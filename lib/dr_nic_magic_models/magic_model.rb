@@ -53,9 +53,11 @@ module DrNicMagicModels::MagicModel
         rescue NotImplementedError 
           nil
         end
-      if not fkc.nil? and fkc.length > 0
+      if !fkc.nil? && fkc.length > 0
         foreign_key = fkc.first.foreign_key
-        options = {:dependent => :destroy, :foreign_key => fkc.first.foreign_key, :class_name => self.class.class_name(fkc.first.reference_table)}
+        options = {:dependent => :destroy, 
+          :foreign_key => fkc.first.foreign_key, 
+          :class_name => self.class.class_name(fkc.first.reference_table)}
       else
         foreign_key = self.class.columns.select {|column| column.name == method.to_s.foreign_key}.first
       end

@@ -34,11 +34,11 @@
 <div id="main">
 	<p><a href="/">&#x21A9; More Magic</a></p>
 
+	  <div id="version" class="clickable" onclick='document.location = "<%= download %>"; return false'>
+	    Get Version
+	    <a id="version_num" href="<%= download %>" class="numbers"></a>
+	  </div>
     <h1><%= title %></h1>
-    <div id="version" class="clickable" onclick='document.location = "<%= download %>"; return false'>
-      Get Version
-      <a id="version_num" href="<%= download %>" class="numbers"></a>
-    </div>
     <%= body %>
     <p class="coda">
       <a href="mailto:drnicwilliams@gmail.com">Dr Nic</a>, <%= modified.pretty %><br>

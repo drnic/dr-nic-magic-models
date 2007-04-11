@@ -1,3 +1,10 @@
+*** 0.9.1 / 2007-4-11
+
++ 1 minor enhancement:
+    + ActiveRecord::Base includes all the magic model functionality via the MagicModel module
+    + Existing ARs can get magic validation via #generate_validations call
+    + Website tutorial works :D
+			
 *** 0.9.0 / 2007-4-9
 
 + 1 major enhancement:
