@@ -47,9 +47,10 @@ module DrNicMagicModels::MagicModel
     end
     
     def find_belongs_to(method, *args, &block)
+      method_clean = clean_method method
       fkc = 
         begin
-          self.class.connection.foreign_key_constraints(self.class.table_name, method) 
+          self.class.connection.foreign_key_constraints(self.class.table_name, method_clean) 
         rescue NotImplementedError 
           nil
         end
@@ -59,19 +60,20 @@ module DrNicMagicModels::MagicModel
           :foreign_key => fkc.first.foreign_key, 
           :class_name => self.class.class_name(fkc.first.reference_table)}
       else
-        foreign_key = self.class.columns.select {|column| column.name == method.to_s.foreign_key}.first
+        foreign_key = self.class.columns.select {|column| column.name == method_clean.to_s.foreign_key}.first
       end
       options ||= {}
-      return add_belongs_to(method, options, *args, &block) if foreign_key
+      return add_belongs_to(method, method_clean, options, *args, &block) if foreign_key
     end
 
-    def add_belongs_to(method, options, *args, &block)
-      self.class.send 'belongs_to', method, options rescue puts $!
+    def add_belongs_to(method, method_clean, options, *args, &block)
+      self.class.send 'belongs_to', method_clean.to_sym, options rescue puts $!
       self.send(method, *args, &block)
     end
     
     def find_has_some(method, *args, &block)
-      fkc = [method.to_s.pluralize, method.to_s.singularize].inject({}) do |pair, table_name|
+      method_clean = clean_method method
+      fkc = [method_clean.to_s.pluralize, method_clean.to_s.singularize].inject({}) do |pair, table_name|
         fkc = begin
                 self.class.connection.foreign_key_constraints(table_name)
               rescue NotImplementedError
@@ -91,17 +93,16 @@ module DrNicMagicModels::MagicModel
         end
       end
       unless foreign_key
-        klass = Module.const_get method.to_s.downcase.singularize.camelize rescue nil
+        klass = Module.const_get method_clean.to_s.downcase.singularize.camelize rescue nil
         foreign_key = klass.columns.select {|column| column.name == self.class.name.foreign_key}.first if klass
       end
       options ||= {}
-      return add_has_some(method, options, *args, &block) if foreign_key
+      return add_has_some(method, method_clean, options, *args, &block) if foreign_key
     end
           
-    def add_has_some(method, options, *args, &block)
-      _method = method.to_s
-      association = _method.singularize == _method ? 'has_one' : 'has_many'
-      self.class.send association, method, options rescue puts $!
+    def add_has_some(method, method_clean, options, *args, &block)
+      association = method_clean.singularize == _method ? 'has_one' : 'has_many'
+      self.class.send association, method_clean.to_sym, options rescue puts $!
       self.send(method, *args, &block)
     end
     
@@ -119,9 +120,12 @@ module DrNicMagicModels::MagicModel
     end
     
     def add_has_some_through(join_table, method, *args, &block)
-      puts "#{self.class}.has_many #{method.inspect}, #{join_table.inspect}, #{args.inspect}"
       self.class.send 'has_many', method, :through => join_table.to_sym
       self.send(method, *args, &block)
+    end
+    
+    def clean_method(method)
+      method.to_s.gsub(/=$/,'') # remove any = from the end of the method name
     end
   end
 end

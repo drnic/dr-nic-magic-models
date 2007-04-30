@@ -189,7 +189,7 @@ Let's just watch what Dr Nic's Magic Models can do without any effort at all...
 <pre syntax="ruby">
 person = Person.create(:firstname => "Nic", :lastname => "Williams", :email => "drnicwilliams@gmail.com")
 group = Group.create(:name => "Magic Models Forum", :description => "http://groups.google.com/magicmodels")
-membership = Membership.create(:person_id => person, :group_id => group)
+membership = Membership.create(:person => person, :group => group)
 person.memberships.length
 => 1
 membership.person
@@ -200,7 +200,7 @@ group.memberships
 </pre>
 
 
-The final association trick is a ripper. Automatic generation of <code>has_many :through</code> associations...
+That final association trick is a ripper. Automatic generation of <code>has_many :through</code> associations...
 
 <pre syntax="ruby">
 >> person.groups

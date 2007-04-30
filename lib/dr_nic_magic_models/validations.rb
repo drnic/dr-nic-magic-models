@@ -5,6 +5,9 @@ module DrNicMagicModels
 
       logger = DrNicMagicModels::Logger
 
+      # Ensure that the connection to db is established, else validations don't get created.
+      ActiveRecord::Base.connection
+      
       # Code reworked from http://www.redhillconsulting.com.au/rails_plugins.html
       # Thanks Red Hill Consulting for using an MIT licence :o)
 
