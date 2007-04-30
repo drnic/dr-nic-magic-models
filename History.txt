@@ -5,6 +5,7 @@
 			validations wouldn't get created until you had already established the connection; now it does it for 
 			you if its not already established
 		+ Associations can be generated via the assignment methods, e.g. @membership.group= will generate the "belongs_to :group" association now. This allows the website tutorial to work correctly! Yay. That is, you can now do: Membership.create(:person => person, :group => group)
+		+ has_many's should work now
 
 *** 0.9.1 / 2007-4-11
 

@@ -101,7 +101,7 @@ module DrNicMagicModels::MagicModel
     end
           
     def add_has_some(method, method_clean, options, *args, &block)
-      association = method_clean.singularize == _method ? 'has_one' : 'has_many'
+      association = method_clean.singularize == method_clean ? 'has_one' : 'has_many'
       self.class.send association, method_clean.to_sym, options rescue puts $!
       self.send(method, *args, &block)
     end
@@ -123,6 +123,8 @@ module DrNicMagicModels::MagicModel
       self.class.send 'has_many', method, :through => join_table.to_sym
       self.send(method, *args, &block)
     end
+    
+  private
     
     def clean_method(method)
       method.to_s.gsub(/=$/,'') # remove any = from the end of the method name
