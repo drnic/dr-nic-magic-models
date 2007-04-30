@@ -264,7 +264,7 @@ demonstrated above) to have the brilliantly simple support that Rails/ActiveReco
 	<p><pre class="syntax">
 <span class="ident">person</span> <span class="punct">=</span> <span class="constant">Person</span><span class="punct">.</span><span class="ident">create</span><span class="punct">(</span><span class="symbol">:firstname</span> <span class="punct">=&gt;</span> <span class="punct">&quot;</span><span class="string">Nic</span><span class="punct">&quot;,</span> <span class="symbol">:lastname</span> <span class="punct">=&gt;</span> <span class="punct">&quot;</span><span class="string">Williams</span><span class="punct">&quot;,</span> <span class="symbol">:email</span> <span class="punct">=&gt;</span> <span class="punct">&quot;</span><span class="string">drnicwilliams@gmail.com</span><span class="punct">&quot;)</span>
 <span class="ident">group</span> <span class="punct">=</span> <span class="constant">Group</span><span class="punct">.</span><span class="ident">create</span><span class="punct">(</span><span class="symbol">:name</span> <span class="punct">=&gt;</span> <span class="punct">&quot;</span><span class="string">Magic Models Forum</span><span class="punct">&quot;,</span> <span class="symbol">:description</span> <span class="punct">=&gt;</span> <span class="punct">&quot;</span><span class="string">http://groups.google.com/magicmodels</span><span class="punct">&quot;)</span>
-<span class="ident">membership</span> <span class="punct">=</span> <span class="constant">Membership</span><span class="punct">.</span><span class="ident">create</span><span class="punct">(</span><span class="symbol">:person_id</span> <span class="punct">=&gt;</span> <span class="ident">person</span><span class="punct">,</span> <span class="symbol">:group_id</span> <span class="punct">=&gt;</span> <span class="ident">group</span><span class="punct">)</span>
+<span class="ident">membership</span> <span class="punct">=</span> <span class="constant">Membership</span><span class="punct">.</span><span class="ident">create</span><span class="punct">(</span><span class="symbol">:person</span> <span class="punct">=&gt;</span> <span class="ident">person</span><span class="punct">,</span> <span class="symbol">:group</span> <span class="punct">=&gt;</span> <span class="ident">group</span><span class="punct">)</span>
 <span class="ident">person</span><span class="punct">.</span><span class="ident">memberships</span><span class="punct">.</span><span class="ident">length</span>
 <span class="punct">=&gt;</span> <span class="number">1</span>
 <span class="ident">membership</span><span class="punct">.</span><span class="ident">person</span>
@@ -275,7 +275,7 @@ demonstrated above) to have the brilliantly simple support that Rails/ActiveReco
 </pre></p>
 
 
-	<p>The final association trick is a ripper. Automatic generation of <code>has_many :through</code> associations&#8230;</p>
+	<p>That final association trick is a ripper. Automatic generation of <code>has_many :through</code> associations&#8230;</p>
 
 
 	<p><pre class="syntax">
