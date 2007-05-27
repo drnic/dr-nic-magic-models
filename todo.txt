@@ -1,0 +1,4 @@
+* Update Rakefile to match latest newgem
+* Make logger point to normal ActiveRecord logger
+* STI - if a type field is present - create classes for any value requested as a subclass of the table itself
+* If :include is present, generate the association if it doesn't exist
