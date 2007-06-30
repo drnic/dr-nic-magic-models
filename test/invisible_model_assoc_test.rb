@@ -1,4 +1,4 @@
-require 'abstract_unit'
+require File.dirname(__FILE__) + '/abstract_unit'
 
 class InvisibleModelAssocTest < Test::Unit::TestCase
   # fixtures :fun_users, :groups, :group_memberships, :group_tag, :adjectives, :adjectives_fun_users
@@ -49,7 +49,7 @@ class InvisibleModelAssocTest < Test::Unit::TestCase
     assert_equal @group, @membership.group
     manual_result = GroupTag.find(:all, :conditions => ['group_tag.group_id = ?', @group.id]) #.sort{|a,b| a.id <=> b.id}
     auto_result = @group.group_tags #.sort{|a,b| a.id <=> b.id}
-    assert manual_result == auto_result, "[#{manual_result.join(',')}] != [#{auto_result.join(',')}]"
+    assert_equal manual_result, auto_result, "[#{manual_result.join(',')}] != [#{auto_result.join(',')}]"
       
   end
   

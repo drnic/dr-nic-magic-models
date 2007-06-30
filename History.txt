@@ -1,28 +1,32 @@
-*** 0.9.2 / 2007-4-30
+== 0.9.3 2007-06-30
 
-+ 3 major bugfixes:
-    + #generate_validations now works if you haven't already created a connection to the database; previously
+* Allows ActiveRecord::StatementInvalid for attempts to find pluralised tables that don't exist
+
+== 0.9.2 / 2007-4-30
+
+* 3 major bugfixes:
+    * #generate_validations now works if you haven't already created a connection to the database; previously
 			validations wouldn't get created until you had already established the connection; now it does it for 
 			you if its not already established
-		+ Associations can be generated via the assignment methods, e.g. @membership.group= will generate the "belongs_to :group" association now. This allows the website tutorial to work correctly! Yay. That is, you can now do: Membership.create(:person => person, :group => group)
-		+ has_many's should work now
+		* Associations can be generated via the assignment methods, e.g. @membership.group= will generate the "belongs_to :group" association now. This allows the website tutorial to work correctly! Yay. That is, you can now do: Membership.create(:person => person, :group => group)
+		* has_many's should work now
 
-*** 0.9.1 / 2007-4-11
+== 0.9.1 / 2007-4-11
 
-+ 1 minor enhancement:
-    + ActiveRecord::Base includes all the magic model functionality via the MagicModel module
-    + Existing ARs can get magic validation via #generate_validations call
-    + Website tutorial works :D
+* 1 minor enhancement:
+    * ActiveRecord::Base includes all the magic model functionality via the MagicModel module
+    * Existing ARs can get magic validation via #generate_validations call
+    * Website tutorial works :D
 			
-*** 0.9.0 / 2007-4-9
+== 0.9.0 / 2007-4-9
 
-+ 1 major enhancement:
-        + Support for dynamic loading of classes again
-+ 2 new DB supported:
-        + Tests run on sqlite (no fk support)
-        + Tests run on postgresql (fk support)
-            + Including FK bug fix
-+ Many fixes that I've lost track of
-+ History.txt to keep track of changes like these
-+ Using Hoe for Rakefile
-+ Use modules to specify common table prefixes
+* 1 major enhancement:
+        * Support for dynamic loading of classes again
+* 2 new DB supported:
+        * Tests run on sqlite (no fk support)
+        * Tests run on postgresql (fk support)
+            * Including FK bug fix
+* Many fixes that I've lost track of
+* History.txt to keep track of changes like these
+* Using Hoe for Rakefile
+* Use modules to specify common table prefixes

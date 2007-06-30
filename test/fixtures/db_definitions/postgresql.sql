@@ -41,7 +41,7 @@ CREATE TABLE "group_tag" (
   "id" SERIAL NOT NULL,
   "name" varchar(50) NOT NULL,
   "group_id" int NOT NULL,
-  "referenced_group_id" int NULL UNIQUE,  
+  "referenced_group_id" int NULL,  
   PRIMARY KEY  ("id")
 );
 
@@ -53,3 +53,4 @@ ALTER TABLE "group_tag"
   
 ALTER TABLE "adjectives_fun_users"
   ADD FOREIGN KEY ("adjective_id") REFERENCES "adjectives" ("id") ON DELETE CASCADE;    
+

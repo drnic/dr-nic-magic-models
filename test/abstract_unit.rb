@@ -4,8 +4,6 @@ require 'rubygems'
 require 'test/unit'
 require 'active_record'
 require 'active_record/fixtures'
-require 'active_support/binding_of_caller'
-require 'active_support/breakpoint'
 require 'connection'
 require 'dr_nic_magic_models'
 

@@ -78,6 +78,8 @@ module DrNicMagicModels::MagicModel
                 self.class.connection.foreign_key_constraints(table_name)
               rescue NotImplementedError
                 nil
+              rescue  ActiveRecord::StatementInvalid
+                nil
               end
         pair[table_name] = fkc if not fkc.blank?
         pair

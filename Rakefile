@@ -53,8 +53,8 @@ hoe = Hoe.new(GEM_NAME, VERS) do |p|
 end
 
 # Run the unit tests
-
-for adapter in %w( sqlite mysql postgresql ) # UNTESTED - postgresql sqlite sqlite3 firebird sqlserver sqlserver_odbc db2 oracle sybase openbase )
+ADAPTERS = %w( sqlite mysql postgresql ) # UNTESTED - postgresql sqlite sqlite3 firebird sqlserver sqlserver_odbc db2 oracle sybase openbase )
+for adapter in ADAPTERS
   Rake::TestTask.new("test_#{adapter}") { |t|
     t.libs << "test" << "test/connections/native_#{adapter}"
     t.pattern = "test/*_test{,_#{adapter}}.rb"
@@ -62,56 +62,73 @@ for adapter in %w( sqlite mysql postgresql ) # UNTESTED - postgresql sqlite sqli
   }
 end
 
+task :default do
+  puts "To run tests, call the explicit test_<adapter> task"
+end
+
 SCHEMA_PATH = File.join(File.dirname(__FILE__), *%w(test fixtures db_definitions))
 
-desc 'Build the MySQL test databases'
-task :build_mysql_databases do 
-  puts File.join(SCHEMA_PATH, 'mysql.sql')
-  %x( mysqladmin -u root create "#{GEM_NAME}_unittest" )
-  cmd = "mysql -u root #{GEM_NAME}_unittest < \"#{File.join(SCHEMA_PATH, 'mysql.sql')}\""
-  puts "#{cmd}\n"
-  %x( #{cmd} )
+namespace :mysql do
+  desc 'Build the MySQL test databases'
+  task :build_databases do 
+    puts File.join(SCHEMA_PATH, 'mysql.sql')
+    socket = '/Applications/MAMP/tmp/mysql/mysql.sock'
+    user   = 'root'
+    sh %{ mysqladmin -u #{user} -S #{socket} -p create "#{GEM_NAME}_unittest" }
+    sh %{ mysql -u #{user} -S #{socket} -p "#{GEM_NAME}_unittest" < #{File.join(SCHEMA_PATH, 'mysql.sql')} }
+  end
+
+  desc 'Drop the MySQL test databases'
+  task :drop_databases do 
+    socket = '/Applications/MAMP/tmp/mysql/mysql.sock'
+    user   = 'root'
+    sh %{ mysqladmin -u #{user} -S #{socket} -p -f drop "#{GEM_NAME}_unittest" }
+  end
+
+  desc 'Rebuild the MySQL test databases'
+
+  task :rebuild_databases => [:drop_databases, :build_databases]
+  
+  task :test => :test_mysql
 end
 
-desc 'Drop the MySQL test databases'
-task :drop_mysql_databases do 
-  %x( mysqladmin -u root -f drop "#{GEM_NAME}_unittest" )
+namespace :sqlite do
+  desc 'Build the sqlite test databases'
+  task :build_databases do 
+    file = File.join(SCHEMA_PATH, 'sqlite.sql')
+    cmd = "sqlite3 test.db < #{file}"
+    puts cmd
+    sh %{ #{cmd} }
+  end
+
+  desc 'Drop the sqlite test databases'
+  task :drop_databases do 
+    sh %{ rm -f test.db }
+  end
+
+  desc 'Rebuild the sqlite test databases'
+  task :rebuild_databases => [:drop_databases, :build_databases]
+  
+  task :test => :test_sqlite
 end
 
-desc 'Rebuild the MySQL test databases'
-task :rebuild_mysql_databases => [:drop_mysql_databases, :build_mysql_databases]
+namespace :postgresql do
+  desc 'Build the PostgreSQL test databases'
+  task :build_databases do 
+    sh %{ createdb "#{GEM_NAME}_unittest" }
+    sh %{ psql "#{GEM_NAME}_unittest" -f #{File.join(SCHEMA_PATH, 'postgresql.sql')} }
+  end
 
-desc 'Build the sqlite test databases'
-task :build_sqlite_databases do 
-  # puts File.join(SCHEMA_PATH, 'sqlite.sql')
-  # %x( sqlite3 test.db < test/fixtures/db_definitions/sqlite.sql )
-  file = File.join(SCHEMA_PATH, 'sqlite.sql')
-  cmd = "sqlite3 test.db < #{file}"
-  puts cmd
-  %x( #{cmd} )
+  desc 'Drop the PostgreSQL test databases'
+  task :drop_databases do 
+    sh %{ dropdb "#{GEM_NAME}_unittest" }
+  end
+
+  desc 'Rebuild the PostgreSQL test databases'
+  task :rebuild_databases => [:drop_databases, :build_databases]
+  
+  task :test => :test_postgresql
 end
-
-desc 'Drop the sqlite test databases'
-task :drop_sqlite_databases do 
-  %x( rm -f test.db )
-end
-
-desc 'Rebuild the sqlite test databases'
-task :rebuild_sqlite_databases => [:drop_sqlite_databases, :build_sqlite_databases]
-
-desc 'Build the PostgreSQL test databases'
-task :build_postgresql_databases do 
-  %x( createdb "#{GEM_NAME}_unittest" )
-  %x( psql "#{GEM_NAME}_unittest" -f "#{File.join(SCHEMA_PATH, 'postgresql.sql')}" )
-end
-
-desc 'Drop the PostgreSQL test databases'
-task :drop_postgresql_databases do 
-  %x( dropdb "#{GEM_NAME}_unittest" )
-end
-
-desc 'Rebuild the PostgreSQL test databases'
-task :rebuild_postgresql_databases => [:drop_postgresql_databases, :build_postgresql_databases]
 
 
 desc 'Generate website files'

@@ -42,7 +42,7 @@ CREATE TABLE `group_tag` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `group_id` int(11) NOT NULL,
-  `referenced_group_id` int(11) NULL UNIQUE,  
+  `referenced_group_id` int(11) NULL,  
   PRIMARY KEY  (`id`)
 );
 
