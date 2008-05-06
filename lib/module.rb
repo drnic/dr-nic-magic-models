@@ -1,7 +1,7 @@
 class Module
   alias :normal_const_missing :const_missing
-  
-  def const_missing(class_id)    
+
+  def const_missing(class_id)
     begin
       return normal_const_missing(class_id)
     rescue
@@ -20,7 +20,7 @@ class Module
     @magic_schema.inflector.post_class_creation klass
     klass
   end
-  
+
   def magic_module(options)
     self.instance_variable_set "@table_name_prefix", options[:table_name_prefix] if options[:table_name_prefix]
   end
