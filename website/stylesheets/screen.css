@@ -94,3 +94,13 @@ pre, code {
 	cursor:	hand;
 }
 
+
+
+.ads {
+  background-color: #7777FF;
+  padding: 10px;
+}
+.ads h4 {
+  color: white;
+  margin: 0px;
+}
